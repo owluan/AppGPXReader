@@ -1,0 +1,10 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             x:Class="AppGPXReader.MainPage">
+    <StackLayout>
+        <Button Text="Carregar GPX" Clicked="OnLoadGpxClicked" />
+        <Button Text="Localização Atual" Clicked="OnCurrentLocationClicked" />
+        <maps:Map x:Name="map" HeightRequest="300" />
+    </StackLayout>
+</ContentPage>
