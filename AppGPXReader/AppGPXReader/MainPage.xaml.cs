@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xamarin.Essentials;
@@ -18,9 +17,7 @@ namespace AppGPXReader
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : ContentPage
     {
-        private Pin pin;
         private ILocationService locationService;
-        private bool isUpdatingLocation;
 
         public MainPage()
         {
@@ -28,31 +25,44 @@ namespace AppGPXReader
 
             locationService = DependencyService.Get<ILocationService>();
 
-            // Cria um Pin para servir de marcador para a posição do dispositivo
-            pin = new Pin
+            // Requests permission to access the users location
+            RequestLocationPermission();
+        }
+
+        private async void RequestLocationPermission()
+        {
+            var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            if (status == PermissionStatus.Granted)
             {
-                Label = "Você está aqui",
-                Type = PinType.Place,
-                Position = new Position(0, 0)
-            };
-
-            map.Pins.Add(pin);
-                       
-
-            // Atualiza a posição do "Pin" 
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+                // Initializes the map with the current user location 
+                await InitializeMapWithUserLocation();
+            }
+            else
             {
-                UpdateUserLocation();
-                return isUpdatingLocation; // Continua a atualização enquanto isUpdatingLocation for verdadeiro
-            });
+                await DisplayAlert("Permissão de Localização", "A permissão de localização não foi concedida. Não é possível exibir sua localização atual.", "OK");
+            }
+        }
 
+        private async Task InitializeMapWithUserLocation()
+        {
+            var location = await locationService.GetLocationAsync();
+
+            if (location != null)
+            {
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
+            }
+            else
+            {
+                await DisplayAlert("Erro", "Não foi possível obter a localização atual", "OK");
+            }
         }
 
         private async void OnLoadGpxClicked(object sender, EventArgs e)
         {
             try
             {
-                // Solicita ao usuário que escolha um arquivo GPX
+                // Prompts the user to choose a GPX file
                 FileData fileData = await CrossFilePicker.Current.PickFile();
 
                 if (fileData == null)
@@ -60,18 +70,18 @@ namespace AppGPXReader
 
                 string filePath = fileData.FilePath;
 
-                // Verifica se o URI retornado é no formato de conteúdo (content://)
+                // Checks if the returned URI is in content format (content://)
                 if (filePath.StartsWith("content://"))
                 {
-                    // Converte o URI em um caminho de arquivo real
+                    // Converts the URI to an actual file path
                     filePath = await GetActualFilePath(filePath);
                 }
 
-                // Lê o conteúdo do arquivo GPX
+                // Read the contents of the GPX file
                 string gpxContent = File.ReadAllText(filePath);
 
-                // Analisa o conteúdo do arquivo GPX
-                XDocument gpxDocument = XDocument.Parse(gpxContent); 
+                // Parses the contents of the GPX file
+                XDocument gpxDocument = XDocument.Parse(gpxContent);
                 XNamespace ns = "http://www.topografix.com/GPX/1/1";
                 XElement trkElement = gpxDocument.Root.Element(ns + "trk");
 
@@ -81,7 +91,7 @@ namespace AppGPXReader
                     return;
                 }
 
-                // Cria uma Lista com cada coordenada contida no arquivo
+                // Creates a List with each coordinate contained in the file
 
                 var trackPoints = gpxDocument.Descendants(ns + "trkpt")
                              .Select(x => new
@@ -91,7 +101,7 @@ namespace AppGPXReader
                              })
                              .ToList();
 
-                // Exibe a rota no mapa utilizando polilinhas
+                // Displays the route on the map using polylines
 
                 List<Position> routeCoordinates = new List<Position>();
 
@@ -109,13 +119,17 @@ namespace AppGPXReader
 
                 foreach (var point in trackPoints)
                 {
-                    polyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
+                    var position = new Position(point.Latitude, point.Longitude);
+                    routeCoordinates.Add(position);
+                    polyline.Geopath.Add(position);
                 }
 
                 map.MapElements.Clear();
+
+                // Add the polyline to the map
                 map.MapElements.Add(polyline);
 
-                // Obtem o ponto inicial da rota e Move o mapa para a posição inicial
+                // Gets the starting point of the route and moves the map to the starting position
                 var startPoint = trackPoints.FirstOrDefault();
 
                 if (startPoint != null)
@@ -126,15 +140,11 @@ namespace AppGPXReader
 
                     map.MoveToRegion(MapSpan.FromCenterAndRadius(initialPosition, Distance.FromKilometers(zoomLevel / 2)));
                 }
-
-                                
-
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Erro", ex.Message, "OK");
             }
-                      
         }
 
         private async Task<string> GetActualFilePath(string contentUri)
@@ -154,50 +164,6 @@ namespace AppGPXReader
             string filePath = Path.Combine(FileSystem.CacheDirectory, "temp.gpx");
             File.WriteAllBytes(filePath, fileData);
             return Task.FromResult(filePath);
-        }
-
-        private async void OnCurrentLocationClicked(object sender, EventArgs e)
-        {
-            var location = await locationService.GetLocationAsync();
-
-            if (location != null)
-            {
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
-            }
-            else
-            {
-                await DisplayAlert("Erro", "Não foi possível obter a localização atual", "OK");
-            }
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            // Inicia a atualização da posição do "Pin"
-            isUpdatingLocation = true;
-        }
-    
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            // Para de atualizar a posição do "Pin"
-            isUpdatingLocation = false;
-        }
-
-        private async void UpdateUserLocation()
-        {
-            var location = await locationService.GetLocationAsync();
-
-            if (location != null)
-            {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    pin.Position = new Position(location.Latitude, location.Longitude);
-                });
-            }
         }
     }
 }
