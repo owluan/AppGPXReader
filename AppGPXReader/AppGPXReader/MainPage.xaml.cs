@@ -101,15 +101,7 @@ namespace AppGPXReader
                              })
                              .ToList();
 
-                // Displays the route on the map using polylines
-
-                List<Position> routeCoordinates = new List<Position>();
-
-                foreach (var point in trackPoints)
-                {
-                    var position = new Position(point.Latitude, point.Longitude);
-                    routeCoordinates.Add(position);
-                }
+                // Displays the route on the map using polylines           
 
                 var polyline = new Polyline
                 {
@@ -120,7 +112,6 @@ namespace AppGPXReader
                 foreach (var point in trackPoints)
                 {
                     var position = new Position(point.Latitude, point.Longitude);
-                    routeCoordinates.Add(position);
                     polyline.Geopath.Add(position);
                 }
 

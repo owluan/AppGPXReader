@@ -11,14 +11,12 @@ namespace AppGPXReader.Droid.Services
         public async Task<Stream> GetFileStream(string contentUri)
         {
             var context = Android.App.Application.Context;
-            using (var resolver = context.ContentResolver)
-            {
-                var inputStream = resolver.OpenInputStream(Android.Net.Uri.Parse(contentUri));
-                var memoryStream = new MemoryStream();
-                await inputStream.CopyToAsync(memoryStream);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                return memoryStream;
-            }
+            var resolver = context.ContentResolver;
+            var inputStream = resolver.OpenInputStream(Android.Net.Uri.Parse(contentUri));
+            var memoryStream = new MemoryStream();
+            await inputStream.CopyToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
         }
     }
 }
