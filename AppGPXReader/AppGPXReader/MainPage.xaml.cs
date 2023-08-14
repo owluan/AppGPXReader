@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xamarin.Essentials;
@@ -20,21 +21,20 @@ namespace AppGPXReader
     public partial class MainPage : ContentPage
     {
         private ILocationService locationService;
-
         public UserInfo UserInfo { get; set; } = new UserInfo();
 
         public MainPage()
         {
             InitializeComponent();
 
-            UserInfo.Email = SecureStorage.GetAsync("UserName").Result;
+            UserInfo.Name = SecureStorage.GetAsync("UserName").Result;
             UserInfo.Email = SecureStorage.GetAsync("UserEmail").Result;
+            UserInfo.Picture = SecureStorage.GetAsync("UserPicture").Result;
 
             BindingContext = this;
 
             locationService = DependencyService.Get<ILocationService>();
 
-            // Requests permission to access the users location
             RequestLocationPermission();
         }
 
@@ -44,7 +44,6 @@ namespace AppGPXReader
 
             if (status == PermissionStatus.Granted)
             {
-                // Initializes the map with the current user location 
                 await InitializeMapWithUserLocation();
             }
             else
@@ -125,8 +124,6 @@ namespace AppGPXReader
                 }
 
                 map.MapElements.Clear();
-
-                // Add the polyline to the map
                 map.MapElements.Add(polyline);
 
                 // Gets the starting point of the route and moves the map to the starting position
@@ -164,6 +161,54 @@ namespace AppGPXReader
             string filePath = Path.Combine(FileSystem.CacheDirectory, "temp.gpx");
             File.WriteAllBytes(filePath, fileData);
             return Task.FromResult(filePath);
+        }
+
+        private async void OnLogoutClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                // Obter o token de acesso atual
+                string accessToken = SecureStorage.GetAsync("accessToken").Result;
+
+                // Revogar o token de acesso
+                await RevokeAccessTokenAsync(accessToken);
+
+                // Limpar informações de usuário da aplicação
+                SecureStorage.Remove("UserName");
+                SecureStorage.Remove("UserEmail");
+                SecureStorage.Remove("UserPicture");
+                SecureStorage.Remove("accessToken");
+
+                // Navegar de volta para a página de login
+                await Navigation.PopToRootAsync(); // Isso levará você de volta à página inicial da pilha de navegação (página de login)
+            }
+            catch (Exception ex)
+            {
+                // Lidar com exceções, se necessário
+                await DisplayAlert("Erro", "Ocorreu um erro durante o logout.", "OK");
+            }
+        }
+
+        private async Task RevokeAccessTokenAsync(string accessToken)
+        {
+            var client = new HttpClient();
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                 new KeyValuePair<string, string>("token", accessToken)
+            });
+
+            var response = await client.PostAsync("https://accounts.google.com/o/oauth2/revoke", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await DisplayAlert("Logout", "Logout efetuado com sucesso!", "OK"); // Logout successful
+            }
+            else
+            {
+                await DisplayAlert("Erro", "Ocorreu um erro durante o logout.", "OK");  // Logout failed
+            }
+
         }
     }
 }

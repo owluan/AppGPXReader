@@ -7,12 +7,13 @@ using Xamarin.Essentials;
 using AppGPXReader.Utility;
 using AppGPXReader.Models;
 using System.Net.Http.Headers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppGPXReader.Views
 {
     public partial class LoginPage : ContentPage
     {
-
         public LoginPage()
         {
             InitializeComponent();
@@ -20,7 +21,7 @@ namespace AppGPXReader.Views
 
         private async void OnGoogleLoginClicked(object sender, EventArgs e)
         {
-            var authUrl = $"https://accounts.google.com/o/oauth2/auth?client_id={Constants.GoogleClientId}&redirect_uri={Constants.GoogleRedirectUrl}&scope=email&response_type=code";
+            var authUrl = $"https://accounts.google.com/o/oauth2/auth?client_id={Constants.GoogleClientId}&redirect_uri={Constants.GoogleRedirectUrl}&scope=email profile&response_type=code";
 
             var callbackUri = new Uri(Constants.GoogleRedirectUrl);
 
@@ -40,6 +41,8 @@ namespace AppGPXReader.Views
 
                 var accessToken = JsonDocument.Parse(tokenContent).RootElement.GetProperty("access_token").GetString();
 
+                await SecureStorage.SetAsync("accessToken", accessToken);
+
                 // Use the access token for making further API requests or handling user authentication
 
                 // Agora, faça uma chamada à API UserInfo do Google usando o token de acesso
@@ -54,8 +57,9 @@ namespace AppGPXReader.Views
 
                     if (userInfo != null)
                     {
-                        await SecureStorage.SetAsync("UserName", userInfo.Email);
+                        await SecureStorage.SetAsync("UserName", userInfo.Name);
                         await SecureStorage.SetAsync("UserEmail", userInfo.Email);
+                        await SecureStorage.SetAsync("UserPicture", userInfo.Picture);
 
                         await Navigation.PushAsync(new MainPage());
                     }
@@ -71,5 +75,7 @@ namespace AppGPXReader.Views
                 }
             }
         }
+       
+
     }
 }
