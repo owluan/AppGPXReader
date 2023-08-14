@@ -3,6 +3,10 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              x:Class="AppGPXReader.MainPage">
     <StackLayout>
+        <Label Text="User Name:" />
+        <Label Text="{Binding UserInfo.Email}" TextColor="AliceBlue" />
+        <Label Text="User Email:" />
+        <Label Text="{Binding UserInfo.Email}" TextColor="AliceBlue" />
         <Button Text="Carregar GPX" Clicked="OnLoadGpxClicked" />
         <maps:Map x:Name="map" HeightRequest="300" IsShowingUser="True" />
     </StackLayout>

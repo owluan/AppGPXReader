@@ -1,4 +1,6 @@
-﻿using AppGPXReader.Services;
+﻿using AppGPXReader.Models;
+using AppGPXReader.Services;
+using AppGPXReader.Views;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
@@ -19,9 +21,16 @@ namespace AppGPXReader
     {
         private ILocationService locationService;
 
+        public UserInfo UserInfo { get; set; } = new UserInfo();
+
         public MainPage()
         {
             InitializeComponent();
+
+            UserInfo.Email = SecureStorage.GetAsync("UserName").Result;
+            UserInfo.Email = SecureStorage.GetAsync("UserEmail").Result;
+
+            BindingContext = this;
 
             locationService = DependencyService.Get<ILocationService>();
 

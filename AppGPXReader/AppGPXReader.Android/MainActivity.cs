@@ -2,11 +2,6 @@
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
-using Android.Locations;
-using AppGPXReader.Services;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Location = Xamarin.Essentials.Location;
 
 
 namespace AppGPXReader.Droid

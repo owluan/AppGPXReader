@@ -1,6 +1,7 @@
-﻿using System;
+﻿using AppGPXReader.Views;
+using System;
+using Xamarin.Auth;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace AppGPXReader
 {
@@ -8,9 +9,9 @@ namespace AppGPXReader
     {
         public App()
         {
-            InitializeComponent();
+            InitializeComponent();          
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new LoginPage());
         }
 
         protected override void OnStart()
