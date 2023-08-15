@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.appgpxreader">
-  <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
-  <application android:label="AppGPXReader.Android" android:theme="@style/MainTheme">
-    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCv12xSFqHJ32ICrLTvis9O3tZrjbrP5IE" />
-    <uses-library android:name="org.apache.http.legacy" android:required="false" />
-
-    <activity android:name=".GoogleAuthCallbackActivity" android:exported="true">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="com.googleusercontent.apps.165711430590-ekm6av6c7230kcq68v917h17oc8g4ntc" android:host="oauth2redirect" />
-      </intent-filter>
-    </activity>
-
-  </application>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.INTERNET" />
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
+	<application android:label="AppGPXReader.Android" android:theme="@style/MainTheme" android:icon="@mipmap/ic_launcher">
+		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCv12xSFqHJ32ICrLTvis9O3tZrjbrP5IE" />
+		<uses-library android:name="org.apache.http.legacy" android:required="false" />
+		<activity android:name=".GoogleAuthCallbackActivity" android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="com.googleusercontent.apps.165711430590-ekm6av6c7230kcq68v917h17oc8g4ntc" android:host="oauth2redirect" />
+			</intent-filter>
+		</activity>
+	</application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>

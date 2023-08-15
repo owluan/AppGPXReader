@@ -17,6 +17,7 @@ namespace AppGPXReader.Views
         public LoginPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private async void OnGoogleLoginClicked(object sender, EventArgs e)

@@ -1,12 +1,12 @@
 ﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppGPXReader.Views.MenuPage">
-    <StackLayout>
+    <StackLayout BackgroundColor="AliceBlue" Padding="8">
         <Image Source="{Binding UserInfo.Picture}" WidthRequest="100" HeightRequest="100" />
-        <Label Text="User Name:" />
-        <Label Text="{Binding UserInfo.Name}" TextColor="AliceBlue" />
-        <Label Text="User Email:" />
-        <Label Text="{Binding UserInfo.Email}" TextColor="AliceBlue" />
+        <Label Text="Name:" />
+        <Label Text="{Binding UserInfo.Name}" TextColor="LightSalmon" />
+        <Label Text="Email:" />
+        <Label Text="{Binding UserInfo.Email}" TextColor="LightSalmon" />
         <ListView x:Name="menuPageListView"
                   ItemsSource="{Binding MenuItems}"
                   SelectedItem="{Binding SelectedMenuItem}"
@@ -16,7 +16,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Padding="10">
+                        <StackLayout Padding="12">
                             <Label Text="{Binding Title}" />
                         </StackLayout>
                     </ViewCell>

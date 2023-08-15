@@ -3,6 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppGPXReader.App">
     <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="White">#FFFFFF</Color>
+            <Color x:Key="Black">#000000</Color>
 
+            <Color x:Key="Purple">#623CEA</Color>
+            <Color x:Key="LightPurple">#D7CCFF</Color>
+
+            <Color x:Key="GrayBlue">#F1F3F6</Color>
+            <Color x:Key="DarkGrayBlue">#B3BDC8</Color>
+
+            <Color x:Key="Gray">#8FA0AC</Color>
+            <Color x:Key="LightGray">#CAD1DC</Color>
+            <Color x:Key="DarkGray">#4E5C69</Color>
+
+            <Style TargetType="ImageButton" x:Key="GoogleSignInButton">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HeightRequest" Value="300" />
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0,180,0,0" />
+                <Setter Property="Source">
+                    <Setter.Value>
+                        <UriImageSource Uri="https://firebasestorage.googleapis.com/v0/b/appgpxreader.appspot.com/o/btn_google_signin_light_normal.png?alt=media&amp;token=22b92153-ef51-4024-8982-66d0ec4eb968" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

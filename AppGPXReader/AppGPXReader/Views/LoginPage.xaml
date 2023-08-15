@@ -4,7 +4,10 @@
              x:Class="AppGPXReader.Views.LoginPage">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Login with Google" Clicked="OnGoogleLoginClicked" />
-        </StackLayout>  
+            <Label Text="AppGPXReader" HorizontalOptions="Center" VerticalOptions="Start" FontSize="Title" Margin="0,40,0,20"/>
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <ImageButton Style ="{StaticResource GoogleSignInButton}" Clicked="OnGoogleLoginClicked" />
+            </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
