@@ -21,17 +21,10 @@ namespace AppGPXReader
     public partial class MainPage : ContentPage
     {
         private ILocationService locationService;
-        public UserInfo UserInfo { get; set; } = new UserInfo();
 
         public MainPage()
         {
             InitializeComponent();
-
-            UserInfo.Name = SecureStorage.GetAsync("UserName").Result;
-            UserInfo.Email = SecureStorage.GetAsync("UserEmail").Result;
-            UserInfo.Picture = SecureStorage.GetAsync("UserPicture").Result;
-
-            BindingContext = this;
 
             locationService = DependencyService.Get<ILocationService>();
 
