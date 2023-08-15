@@ -60,17 +60,17 @@ namespace AppGPXReader.Views
                         await SecureStorage.SetAsync("UserEmail", userInfo.Email);
                         await SecureStorage.SetAsync("UserPicture", userInfo.Picture);
 
-                        // Crie a instância da MainPage (MasterDetailPage)
+                        // Create the MainPage instance (MasterDetailPage)
                         var menuPage = new MenuPage();
                         menuPage.Title = "Navigation";
 
                         var mainPage = new MasterDetailPage
                         {
                             Master = menuPage,
-                            Detail = new NavigationPage(new MainPage()) // Defina a MainPage como a página de detalhes
+                            Detail = new NavigationPage(new MainPage()) // Set MainPage as the detail page
                         };
 
-                        // Defina a MainPage como a nova página raiz
+                        // Set MainPage as the new root page
                         App.Current.MainPage = mainPage;
                     }
                     else

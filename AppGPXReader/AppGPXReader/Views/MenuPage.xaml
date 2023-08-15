@@ -10,7 +10,8 @@
         <ListView x:Name="menuPageListView"
                   ItemsSource="{Binding MenuItems}"
                   SelectedItem="{Binding SelectedMenuItem}"
-                  HasUnevenRows="true">
+                  HasUnevenRows="true"
+                  ItemSelected="OnMenuItemSelected">
 
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 namespace AppGPXReader.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MenuPage : ContentPage
+    public partial class MenuPage : ContentPage 
     {
         public UserInfo UserInfo { get; set; } = new UserInfo();
         public ObservableCollection<Models.MenuItem> MenuItems { get; set; }
@@ -28,12 +28,37 @@ namespace AppGPXReader.Views
 
             MenuItems = new ObservableCollection<Models.MenuItem>
         {
-            new Models.MenuItem { Title = "Home", TargetType = typeof(MainPage) }, // Substitua HomePage pela página que deseja exibir
-            new Models.MenuItem { Title = "Settings", TargetType = typeof(MainPage) } // Substitua SettingsPage pela página que deseja exibir
-            // Adicione mais itens conforme necessário
+            new Models.MenuItem { Title = "Home", TargetType = typeof(MainPage) }, 
+            new Models.MenuItem { Title = "Settings", TargetType = typeof(LoginPage) } 
         };
 
             BindingContext = this;
+        }
+
+        private async void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem == null)
+                return;
+
+            var selectedItem = e.SelectedItem as Models.MenuItem;
+
+            if (selectedItem != null)
+            {
+                Type pageType = selectedItem.TargetType;
+                Page page = (Page)Activator.CreateInstance(pageType);
+
+                // Close the menu
+                if (Application.Current.MainPage is MasterDetailPage mainPage)
+                {
+                    await mainPage.Detail.FadeTo(0, 200); // Fades out the Detail Page
+                    mainPage.Detail = new NavigationPage(page);
+                    mainPage.IsPresented = false;
+                    await mainPage.Detail.FadeTo(1, 200); // Fades in the new Detail Page
+                }
+            }
+
+            // Reset the selected item
+            ((ListView)sender).SelectedItem = null;
         }
 
         private async void OnLogoutClicked(object sender, EventArgs e)
