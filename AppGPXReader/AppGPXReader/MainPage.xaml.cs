@@ -167,25 +167,22 @@ namespace AppGPXReader
         {
             try
             {
-                // Obter o token de acesso atual
-                string accessToken = SecureStorage.GetAsync("accessToken").Result;
+                // Revoke access token
+                await RevokeAccessTokenAsync(SecureStorage.GetAsync("accessToken").Result);
 
-                // Revogar o token de acesso
-                await RevokeAccessTokenAsync(accessToken);
-
-                // Limpar informações de usuário da aplicação
+                // Clear application user information
                 SecureStorage.Remove("UserName");
                 SecureStorage.Remove("UserEmail");
                 SecureStorage.Remove("UserPicture");
                 SecureStorage.Remove("accessToken");
 
-                // Navegar de volta para a página de login
-                await Navigation.PopToRootAsync(); // Isso levará você de volta à página inicial da pilha de navegação (página de login)
+                // Navigate back to login page
+                await Navigation.PushAsync(new LoginPage());
             }
             catch (Exception ex)
             {
                 // Lidar com exceções, se necessário
-                await DisplayAlert("Erro", "Ocorreu um erro durante o logout.", "OK");
+                await DisplayAlert("Erro", ex.Message, "OK");
             }
         }
 

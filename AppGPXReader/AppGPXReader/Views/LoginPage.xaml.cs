@@ -45,7 +45,6 @@ namespace AppGPXReader.Views
 
                 // Use the access token for making further API requests or handling user authentication
 
-                // Agora, faça uma chamada à API UserInfo do Google usando o token de acesso
                 var userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var userInfoResponse = await httpClient.GetAsync(userInfoUrl);
@@ -61,21 +60,32 @@ namespace AppGPXReader.Views
                         await SecureStorage.SetAsync("UserEmail", userInfo.Email);
                         await SecureStorage.SetAsync("UserPicture", userInfo.Picture);
 
-                        await Navigation.PushAsync(new MainPage());
+                        // Crie a instância da MainPage (MasterDetailPage)
+                        var menuPage = new MenuPage();
+                        menuPage.Title = "Navigation";
+
+                        var mainPage = new MasterDetailPage
+                        {
+                            Master = menuPage,
+                            Detail = new NavigationPage(new MainPage()) // Defina a MainPage como a página de detalhes
+                        };
+
+                        // Defina a MainPage como a nova página raiz
+                        App.Current.MainPage = mainPage;
                     }
                     else
                     {
-                        // Trate o caso em que a desserialização falha
+                        await DisplayAlert("Erro", "Ocorreu um erro durante o login.", "OK");  // Handle the case where deserialization fails
                     }
 
                 }
                 else
                 {
-                    // Handle unsuccessful Google authentication
+                    await DisplayAlert("Erro", "Ocorreu um erro durante o login.", "OK"); // Handle unsuccessful Google authentication
                 }
             }
         }
-       
+
 
     }
 }

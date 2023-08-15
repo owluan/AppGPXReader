@@ -9,21 +9,9 @@ namespace AppGPXReader
     {
         public App()
         {
-            InitializeComponent();          
+            InitializeComponent();
 
             MainPage = new NavigationPage(new LoginPage());
-        }
-
-        protected override void OnStart()
-        {
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override void OnResume()
-        {
         }
     }
 }

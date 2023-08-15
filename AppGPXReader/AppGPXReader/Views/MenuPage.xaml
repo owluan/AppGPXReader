@@ -1,0 +1,27 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppGPXReader.Views.MenuPage">
+    <StackLayout>
+        <Image Source="{Binding UserInfo.Picture}" WidthRequest="100" HeightRequest="100" />
+        <Label Text="User Name:" />
+        <Label Text="{Binding UserInfo.Name}" TextColor="AliceBlue" />
+        <Label Text="User Email:" />
+        <Label Text="{Binding UserInfo.Email}" TextColor="AliceBlue" />
+        <ListView x:Name="menuPageListView"
+                  ItemsSource="{Binding MenuItems}"
+                  SelectedItem="{Binding SelectedMenuItem}"
+                  HasUnevenRows="true">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding Title}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Text="Logout" Clicked="OnLogoutClicked" />
+    </StackLayout>
+</ContentPage>
